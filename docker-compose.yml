@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  django:
+    build:
+      context: ./packages/order_food_server
+      dockerfile: Dockerfile
+    volumes:
+      - ./packages/order_food_server:/app
+    ports:
+      - "8989:8989"
+
+  flutter:
+    build:
+      context: ./packages/order_food_ui
+      dockerfile: Dockerfile
+    volumes:
+      - ./packages/order_food_ui:/app
+    ports:
+      - "7979:80"

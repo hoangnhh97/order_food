@@ -1,0 +1,12 @@
+name: order_food_solution
+packages:
+  - packages/**
+
+scripts:
+  flutter:test:
+    run: flutter test
+    working_directory: packages/order_food_ui
+  python:test:
+    run: python -m unittest discover
+    working_directory: packages/order_food_server
+
