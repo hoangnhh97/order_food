@@ -64,12 +64,12 @@ class CreatePaymentLink(APIView):
 
                 name = serializer.validated_data['name']
                 quantity = serializer.validated_data['quantity']
-                unitPrice = 2000
+                unitPrice = serializer.validated_data['unitPrice']
                 buyerName = serializer.validated_data['buyerName']
-                totalPrice = unitPrice*quantity
+                totalPrice = serializer.validated_data['totalPrice']
                 item = ItemData(name=name, quantity=quantity, price=unitPrice)
                 paymentData = PaymentData(orderCode=orderCode, buyerName=buyerName, amount=totalPrice, description="Thanh toan don hang",
-                                          items=[item], cancelUrl="http://localhost:7979/payment/cancel-payment", returnUrl="http://localhost:7979/payment/callback")
+                                          items=[item], cancelUrl="http://172.21.100.33:7979/payment/cancel-payment", returnUrl="http://172.21.100.33:7979/payment/callback")
 
                 paymentLinkData = payOS.createPaymentLink(
                     paymentData=paymentData)

@@ -9,6 +9,7 @@ class PaymentSuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     final String? code = queryParams['code'];
     final String? id = queryParams['id'];
     final String? cancel = queryParams['cancel'];

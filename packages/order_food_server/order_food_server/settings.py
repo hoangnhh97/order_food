@@ -32,7 +32,7 @@ SECRET_KEY = "django-insecure-gfhvx5dw-79_1%)tm@iwy76tkl1w1#b@sn77xyeia-giinq5v4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -81,7 +81,9 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8989",
+    "http://172.21.100.33:8989",
     "http://localhost:7979",
+    "http://172.21.100.33:7979",
 ]
 
 ROOT_URLCONF = "order_food_server.urls"

@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:ui_web';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:order_food_ui/pages/dashboard_page.dart';
 import 'package:order_food_ui/pages/list_food.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:order_food_ui/pages/payment-cancel.dart';
 import 'package:order_food_ui/pages/payment-success.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 Future<void> main() async {
