@@ -111,7 +111,7 @@ class PaymentCallback(APIView):
             openapi.Parameter('status', openapi.IN_QUERY,
                               description="", type=openapi.TYPE_STRING),
             openapi.Parameter('orderCode', openapi.IN_QUERY,
-                              description="", type=openapi.TYPE_STRING, required=True),
+                              description="", type=openapi.TYPE_INTEGER, required=True),
         ],
     )
     def get(self, request):
@@ -126,7 +126,7 @@ class PaymentCallback(APIView):
         paymentLinkInfo = payOS.getPaymentLinkInformation(orderId=id)
         print(paymentLinkInfo)
 
-        if paymentLinkInfo and len(orderCode) > 0:
+        if paymentLinkInfo:
             formatted_date = convert_datetime_to_string(
                 paymentLinkInfo.createdAt)
             order_status = paymentLinkInfo.status

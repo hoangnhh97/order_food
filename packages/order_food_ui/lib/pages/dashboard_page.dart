@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_food_ui/pages/list_food.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -100,9 +101,33 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           Expanded(
             child: Center(
-              child: Text(
-                'Welcome to the Dashboard',
-                style: Theme.of(context).textTheme.headlineMedium,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Welcome to the Dashboard',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  SizedBox(
+                      height: 20), // Add some space between the text and button
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FoodListPage()),
+                      );
+                    },
+                    child: const Text(
+                      'Ăn gì hôm nay?',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      textStyle: const TextStyle(color: Colors.white),
+                      backgroundColor: Colors.amber[500],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -50,7 +50,7 @@ class PaymentCancelPage extends StatelessWidget {
 
   void _checkTransactionCancelled(Map<String, String?> queryParams) async {
     final uri = Uri.http(dotenv.env['API_DOMAIN'] ?? '',
-        '/api/payment/payment-cancel', queryParams);
+        '/api/payment/cancel-payment', queryParams);
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {

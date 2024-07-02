@@ -1,0 +1,55 @@
+# Dart/Flutter specific
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/build/
+**/ios/Flutter/.last_build_id
+**/*.lock
+
+# Logs
+logs
+*.log
+flutter_*.log
+
+# Directory for pub packages
+.packages
+
+# IntelliJ related
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# The .vscode folder contains launch configuration and tasks you configure in VSCode
+.vscode/
+
+# Python/Django specific
+*.py[cod]
+*__pycache__
+*.sqlite3
+*.pyc
+
+# Django media
+media
+
+# Virtual environment
+venv/
+ENV/
+env/
+
+# Spurious .DS_Store files
+.DS_Store
+
+# Pycharm
+.pycharm*/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Melos
+**/.melos_tool_state
+**/packages/generated
+
+# Temporary files
+*.tmp

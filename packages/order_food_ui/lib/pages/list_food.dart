@@ -26,6 +26,7 @@ class _FoodListPageState extends State<FoodListPage> {
   Uint8List? _imageData;
   String _fileName = '';
   List<DropdownMenuItem<String>> listMember = [];
+  bool isLoading = false; // Add this line
 
   @override
   void initState() {
@@ -62,6 +63,10 @@ class _FoodListPageState extends State<FoodListPage> {
   }
 
   Future<void> loadFoodList() async {
+    setState(() {
+      isLoading = true; // Show loading indicator
+    });
+
     print(dotenv.env['API_URL'] ?? '');
     final dateString = DateFormat('dd/MM/yyyy').format(selectedDate);
     final url =
@@ -73,11 +78,15 @@ class _FoodListPageState extends State<FoodListPage> {
         final List<dynamic> data = json.decode(response.body);
         setState(() {
           foodList = data.map((item) => FoodItem.fromJson(item)).toList();
+          isLoading = false; // Hide loading indicator
         });
       } else {
         throw Exception('Failed to load food list');
       }
     } catch (e) {
+      setState(() {
+        isLoading = false; // Hide loading indicator
+      });
       print('Error: $e');
     }
   }
@@ -248,6 +257,17 @@ class _FoodListPageState extends State<FoodListPage> {
 
   @override
   Widget build(BuildContext context) {
+    int crossAxisCount = 4;
+
+    if (MediaQuery.of(context).size.width > 1115) {
+      crossAxisCount = 4;
+    } else if (MediaQuery.of(context).size.width > 560 &&
+        MediaQuery.of(context).size.width <= 1115) {
+      crossAxisCount = 2;
+    } else if (MediaQuery.of(context).size.width <= 560) {
+      crossAxisCount = 1;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Food List'),
@@ -299,22 +319,27 @@ class _FoodListPageState extends State<FoodListPage> {
               ),
             ),
             Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(16.0),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 16.0,
-                  mainAxisSpacing: 16.0,
-                ),
-                itemCount: foodList.length,
-                itemBuilder: (context, index) {
-                  return FoodItemCard(
-                    listMember: listMember,
-                    orderDate: DateFormat('dd/MM/yyyy').format(selectedDate),
-                    foodItem: foodList[index],
-                  );
-                },
-              ),
+              child: isLoading
+                  ? const Center(
+                      child:
+                          CircularProgressIndicator()) // Show loading indicator
+                  : GridView.builder(
+                      padding: const EdgeInsets.all(16.0),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 16.0,
+                        mainAxisSpacing: 16.0,
+                      ),
+                      itemCount: foodList.length,
+                      itemBuilder: (context, index) {
+                        return FoodItemCard(
+                          listMember: listMember,
+                          orderDate:
+                              DateFormat('dd/MM/yyyy').format(selectedDate),
+                          foodItem: foodList[index],
+                        );
+                      },
+                    ),
             ),
           ],
         ),
@@ -548,14 +573,15 @@ class FoodItemCard extends StatelessWidget {
   final FoodItem foodItem;
   final List<DropdownMenuItem<String>> listMember;
   final String orderDate;
-  FoodItemCard(
-      {Key? key,
-      required this.listMember,
-      required this.orderDate,
-      required this.foodItem})
-      : super(key: key);
 
-  String? _paymentUser = null;
+  FoodItemCard({
+    Key? key,
+    required this.listMember,
+    required this.orderDate,
+    required this.foodItem,
+  }) : super(key: key);
+
+  String? _paymentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -564,80 +590,80 @@ class FoodItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 5,
-      margin: EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          // Image placeholder for the food item
-          Container(
-            height: 180,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
-              image: DecorationImage(
-                image: NetworkImage("assets/food.jpg"),
-                fit: BoxFit.cover,
+      margin: const EdgeInsets.all(10),
+      child: SizedBox(
+        height: 250, // Fixed height for each card
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Image placeholder for the food item
+            Container(
+              height: 120,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(10.0)),
+                image: DecorationImage(
+                  image: NetworkImage("assets/food.jpg"),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  foodItem.value,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green[800],
-                  ),
-                ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    // Text(
-                    //   'Quantity: ${foodItem.quantity}',
-                    //   style: TextStyle(
-                    //     fontSize: 14,
-                    //     color: Colors.grey[800],
-                    //   ),
-                    // ),
-                    Text(
-                      (NumberFormat.currency(locale: 'vi-VN'))
-                          .format(foodItem.unitPrice)
-                          .toString(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    foodItem.value,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.green[800],
                     ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    MaterialButton(
-                      color: Theme.of(context)
-                          .primaryColor, // Set the button color
-                      textColor: Colors.white, // Set the text color
-                      padding: const EdgeInsets.all(16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        (NumberFormat.currency(locale: 'vi-VN')
+                                .format(foodItem.unitPrice))
+                            .toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      onPressed: () => showOrderDialog(context, foodItem,
-                          _paymentUser, orderDate, listMember),
-                      child: Text('Order Now'),
-                    )
-                  ],
-                )
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        onPressed: () => showOrderDialog(context, foodItem,
+                            _paymentUser, orderDate, listMember),
+                        child: const Text('Order Now'),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

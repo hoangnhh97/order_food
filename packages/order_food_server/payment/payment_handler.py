@@ -46,7 +46,7 @@ def updatePaymentStatus(dateTime, orderCode):
         if len(row[0]) > 0 and row[1] == orderCode:
             row[5] = True
             try:
-                if isinstance(row[2], str):
+                if isinstance(row[2], str) and len(row[2]) > 0:
                     row[2] = int(row[2])
             except ValueError:
                 row[2] = row[2]  # Default to 0 if conversion fails
